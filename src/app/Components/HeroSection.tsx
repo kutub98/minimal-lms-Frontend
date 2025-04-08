@@ -8,9 +8,9 @@ import AnimatedButton from "../../components/ui/AnimateButton";
 
 const HeroSection = () => {
   return (
-    <Container className="bg-white w-full py-12 md:py-20 lg:flex lg:items-center lg:justify-between">
+    <div className="bg-[#ffffff] w-full py-12 md:py-20 lg:flex lg:items-center lg:justify-between">
       {/* Left content */}
-      <div className="max-w-xl space-y-6">
+      <Container className="max-w-xl space-y-6">
         <h1 className="text-3xl md:text-5xl font-bold leading-tight">
           Enhance Your Skills <br className="hidden md:" />
           With <span className="text-[#560bad]">Our Online</span> Courses
@@ -32,25 +32,7 @@ const HeroSection = () => {
           <FaPhoneAlt className="text-[#560bad]" />
           <span>Call Us : 000 0000 0000</span>
         </div>
-      </div>
-
-      {/* Right content */}
-      {/* <div className=" relative w-full md:w-1/2 flex mt-10 lg:mt-0">
-        <div className="relative w-full h-[400px] mx-auto lg:mx-0">
-          <Image
-            src={HeroBanner}
-            alt="Hero Illustration"
-            fill
-            className="object-contain rounded-xl"
-          />
-        </div>
-
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full flex items-center gap-2">
-          <span className="text-sm font-medium text-blue-600">
-            00K Enrolled Students
-          </span>
-        </div>
-      </div> */}
+      </Container>
 
       {/* Right content */}
       <div className="relative hidden lg:block w-full mt-10 lg:mt-0 md:w-1/2 justify-center">
@@ -70,7 +52,7 @@ const HeroSection = () => {
           </span>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 
