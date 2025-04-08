@@ -6,15 +6,17 @@ import { cn } from "@/lib/utils";
 interface AnimatedButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  color?: string;
-  activeColor?: string;
+  color?: string; // Text and border color
+  activeColor?: string; // Hover background color
+  hoverTextColor?: string; // Optional dynamic hover text color
 }
 
 const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   children,
   className,
-  color = "#560bad",
-  activeColor = "#3a0ca3",
+  color = "#560bad", // Default color
+  activeColor = "#3a0ca3", // Default active color
+  hoverTextColor = "white", // Default hover text color
   ...props
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -26,7 +28,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
         className
       )}
       style={{
-        color: isHovered ? "white" : color,
+        color: isHovered ? hoverTextColor : color, // Dynamically change text color on hover
         borderColor: color
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -36,7 +38,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       {children}
       <span
         className="absolute top-full left-full w-[200px] h-[150px] rounded-full -z-10 transition-all duration-700 group-hover:top-[-30px] group-hover:left-[-30px]"
-        style={{ backgroundColor: isHovered ? activeColor : color }}
+        style={{ backgroundColor: isHovered ? activeColor : color }} // Dynamically change background color on hover
       />
     </button>
   );
