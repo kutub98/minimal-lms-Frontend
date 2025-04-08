@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import { FaCalendarAlt, FaClock, FaUsers } from "react-icons/fa";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { FaCalendarAlt, FaClock, FaUsers } from "react-icons/fa";
+
 import Container from "@/components/ui/Container";
 import AnimatedButton from "@/components/ui/AnimateButton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,15 +23,16 @@ interface Course {
 }
 
 const CourseDetails = () => {
+  const params = useParams();
+  const courseId = params?.id as string;
+
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
-  const { id } = router.query; // Get the dynamic course ID from the URL
 
-  const fetchCourseDetails = async (courseId: string) => {
+  const fetchCourseDetails = async (_id: string) => {
     try {
       const res = await fetch(
-        `https://minimal-lms-backend.vercel.app/api/v1/courses/${courseId}`
+        `https://minimal-lms-backend.vercel.app/api/v1/courses/${_id}`
       );
 
       if (!res.ok) {
@@ -48,17 +49,22 @@ const CourseDetails = () => {
       } else {
         console.error("Unknown error:", error);
       }
-      setLoading(false);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (id) {
-      fetchCourseDetails(id as string); // Fetch course details when ID is available
+    if (courseId) {
+      fetchCourseDetails(courseId);
+
+      const interval = setInterval(() => {
+        fetchCourseDetails(courseId);
+      }, 30000);
+
+      return () => clearInterval(interval);
     }
-  }, [id]);
+  }, [courseId]);
 
   if (loading) {
     return (

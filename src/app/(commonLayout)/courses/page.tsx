@@ -101,7 +101,7 @@ const CourseSection = () => {
                     />
                   </div>
 
-                  <div className="p-2 flex flex-col flex-grow">
+                  <div className="px-4 py-3 flex flex-col flex-grow">
                     <div className="flex items-center flex-wrap gap-2 text-xs font-medium text-gray-700 mb-2">
                       <div className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full">
                         <FaUsers className="text-indigo-500" /> 100 Students
@@ -138,3 +138,21 @@ const CourseSection = () => {
 };
 
 export default CourseSection;
+
+// import useSWR from "swr";
+
+// const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+// function Profile() {
+//   const { data, error } = useSWR("/api/profile-data", fetcher);
+
+//   if (error) return <div>Failed to load</div>;
+//   if (!data) return <div>Loading...</div>;
+
+//   return (
+//     <div>
+//       <h1>{data.name}</h1>
+//       <p>{data.bio}</p>
+//     </div>
+//   );
+// }
