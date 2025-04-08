@@ -54,7 +54,7 @@ const CourseSection = () => {
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch("/api/course");
+      const res = await fetch("/api/courses");
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
