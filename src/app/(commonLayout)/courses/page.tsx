@@ -26,11 +26,35 @@ const CourseSection = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // const fetchCourses = async () => {
+  //   try {
+  //     const res = await fetch(
+  //       "https://minimal-lms-backend.vercel.app/api/v1/courses"
+  //     );
+
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP error! status: ${res.status}`);
+  //     }
+
+  //     const data = await res.json();
+  //     if (data?.data) {
+  //       setCourses(data.data);
+  //     }
+  //   } catch (error: unknown) {
+  //     if (error instanceof Error) {
+  //       console.error("Error fetching courses:", error.message);
+  //     } else {
+  //       console.error("Unknown error:", error);
+  //     }
+  //     setLoading(false); // Stop loading state if there's an error
+  //   } finally {
+  //     setLoading(false); // Ensure loading is set to false when the fetch ends
+  //   }
+  // };
+
   const fetchCourses = async () => {
     try {
-      const res = await fetch(
-        "https://minimal-lms-backend.vercel.app/api/v1/courses"
-      );
+      const res = await fetch("/api/course");
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -46,9 +70,9 @@ const CourseSection = () => {
       } else {
         console.error("Unknown error:", error);
       }
-      setLoading(false); // Stop loading state if there's an error
+      setLoading(false);
     } finally {
-      setLoading(false); // Ensure loading is set to false when the fetch ends
+      setLoading(false);
     }
   };
 
