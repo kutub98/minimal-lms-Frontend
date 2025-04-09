@@ -131,9 +131,15 @@ const CourseDetails = () => {
               </span>
             </div>
             <div className="flex flex-wrap gap-4">
-              <Button onClick={handleFreeClassClick} variant="outline">
-                বিনামূল্যে ক্লাস দেখুন
+              <Button
+                onClick={handleFreeClassClick}
+                variant="outline"
+                className="relative group focus:outline-none focus:ring-2 focus:ring-[#560bad] focus:ring-offset-2 hover:bg-[#560bad] hover:text-white transition-all duration-300 transform active:scale-105"
+              >
+                <span className="absolute inset-0 bg-[#560bad] opacity-20 rounded-full animate-pulse group-hover:opacity-40"></span>
+                <span className="relative z-10">বিনামূল্যে ক্লাস দেখুন</span>
               </Button>
+
               {/* <Button>ফ্রী ক্লাস দেখুন</Button> */}
             </div>
           </div>
