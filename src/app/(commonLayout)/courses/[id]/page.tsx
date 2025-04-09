@@ -12,6 +12,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Laptop, Star, Users, Video } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimateButton";
+import CourseFeatures from "@/app/Components/CourseFeatures";
+import ReviewSection from "@/app/Components/CourseReview";
+import CreateInstruction from "@/app/Components/Instruction";
+import InstructorSection from "@/app/Components/InstructionInfo";
 
 interface Module {
   _id: string;
@@ -124,7 +128,7 @@ const CourseDetails = () => {
         </div> */}
 
         <section className="space-y-8 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Section */}
             <div className="space-y-4">
               <span className="text-sm bg-red-100 text-red-600 px-2 py-1 w-auto flex items-center gap-2 rounded-full">
@@ -243,6 +247,11 @@ const CourseDetails = () => {
             </div>
           </div>
         </section>
+
+        <CourseFeatures />
+        <InstructorSection />
+        <ReviewSection />
+        <CreateInstruction />
       </Container>
     </div>
   );
