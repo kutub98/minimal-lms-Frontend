@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-assign-module-variable */
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -41,12 +43,21 @@ const getEmbedUrl = (url: string): string => {
     }
 
     return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     console.error("Invalid YouTube URL", url);
     return "";
   }
 };
+
+// ✅ Skeleton Loader Component
+const SkeletonLoader = () => (
+  <div className="p-6 space-y-6 animate-pulse text-white max-w-7xl mx-auto">
+    <div className="h-6 w-1/3 bg-gray-700 rounded"></div>
+    <div className="aspect-video bg-gray-800 rounded-xl"></div>
+    <div className="h-4 w-1/2 bg-gray-700 rounded"></div>
+    <div className="h-4 w-2/3 bg-gray-700 rounded"></div>
+  </div>
+);
 
 const LecturesPage = () => {
   const { courseId } = useParams();
@@ -58,6 +69,9 @@ const LecturesPage = () => {
   useEffect(() => {
     const fetchLectures = async () => {
       try {
+        // Optional: simulate loading delay
+        // await new Promise((res) => setTimeout(res, 1000));
+
         const res = await fetch(`/api/courses/${courseId}`);
         const data = await res.json();
         setCourse(data?.data);
@@ -74,7 +88,6 @@ const LecturesPage = () => {
   const getLectureIndex = () => {
     if (!course || !selectedLecture) return null;
     let index = 0;
-    // eslint-disable-next-line @next/next/no-assign-module-variable
     for (const module of course.modules) {
       for (const lecture of module.lectures) {
         if (lecture._id === selectedLecture._id) return index;
@@ -111,7 +124,26 @@ const LecturesPage = () => {
 
   const isLectureCompleted = (id: string) => completedLectures.includes(id);
 
-  if (!course) return <div className="text-white p-4">Loading lectures...</div>;
+  if (!course) {
+    return <SkeletonLoader />;
+  }
+
+  const modulesWithLectures = course.modules?.filter(
+    (mod) => mod.lectures.length > 0
+  );
+
+  if (!modulesWithLectures || modulesWithLectures.length === 0) {
+    return (
+      <div className="text-white p-6 text-center w-full h-screen flex flex-col justify-center items-center">
+        <p className="text-lg font-semibold text-purple-500 animate-bounce">
+          📚 No modules or lectures available at the moment.
+        </p>
+        <p className="text-sm text-gray-400 mt-2">
+          Please check back later as we&lsquo;re updating the course content.
+        </p>
+      </div>
+    );
+  }
 
   const totalLectures = course.modules.reduce(
     (acc, m) => acc + m.lectures.length,
@@ -141,9 +173,9 @@ const LecturesPage = () => {
           <p className="text-lg mt-1 font-semibold">{selectedLecture?.title}</p>
         </div>
 
-        {/* Main Content Layout */}
+        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left/Main Section */}
+          {/* Left Panel */}
           <div className="lg:col-span-2 space-y-6">
             <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-md">
               {selectedLecture?.videoUrl ? (
@@ -161,7 +193,6 @@ const LecturesPage = () => {
               )}
             </div>
 
-            {/* Navigation Buttons */}
             <div className="flex gap-4">
               <button
                 onClick={handlePrevious}
