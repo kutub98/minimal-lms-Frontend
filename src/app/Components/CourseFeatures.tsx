@@ -1,5 +1,6 @@
 "use client";
 
+import Container from "@/components/ui/Container";
 import { motion } from "framer-motion";
 
 const features = [
@@ -54,8 +55,8 @@ const features = [
 
 const CourseFeatures = () => {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-muted">
-      <div className="max-w-7xl mx-auto text-center">
+    <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-muted">
+      <Container className="max-w-7xl mx-auto text-center">
         <motion.h2
           className="text-3xl sm:text-4xl font-extrabold text-primary mb-4"
           initial={{ opacity: 0, y: 30 }}
@@ -90,8 +91,8 @@ const CourseFeatures = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+      </Container>
+    </div>
   );
 };
 

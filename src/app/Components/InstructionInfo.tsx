@@ -64,7 +64,7 @@ const InstructorSection = () => {
       <div className="absolute -top-32 -left-32 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute top-0 right-0 w-72 h-72 bg-purple-400/20 rounded-full blur-2xl animate-pulse" />
 
-      <div className="max-w-6xl mx-auto px-4 text-center">
+      <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
           Masters Behind the Mission
         </h2>

@@ -46,7 +46,7 @@ const ReviewSection = () => {
     <section className="relative bg-gradient-to-br from-indigo-950 via-black to-indigo-900 text-white py-20 px-4 md:px-8 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-800/20 via-transparent to-transparent blur-2xl" />
 
-      <div className="max-w-7xl mx-auto text-center">
+      <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-fuchsia-500 to-pink-500 mb-4">
           What Our Learners Say
         </h2>

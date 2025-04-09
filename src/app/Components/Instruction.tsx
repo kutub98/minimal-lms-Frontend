@@ -35,7 +35,7 @@ const steps: Step[] = [
 const CreateInstruction = () => {
   return (
     <section className="bg-gradient-to-br from-muted to-background py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto text-center">
+      <div className="max-w-7xl mx-auto px-6 text-center">
         <motion.h2
           className="text-3xl sm:text-4xl font-extrabold text-primary mb-4"
           initial={{ opacity: 0, y: 20 }}

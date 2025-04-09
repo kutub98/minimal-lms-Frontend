@@ -4,11 +4,11 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const courseId = (await params).id
+  const id = (await params).id
 
   try {
     const res = await fetch(
-      `https://minimal-lms-backend.vercel.app/api/v1/courses/${courseId}`
+      `https://minimal-lms-backend.vercel.app/api/v1/courses/${id}`
     );
 
     if (!res.ok) {
