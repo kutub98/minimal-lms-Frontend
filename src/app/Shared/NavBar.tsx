@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import AnimatedButton from "@/components/ui/AnimateButton";
-// import { useState } from "react";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -25,26 +23,26 @@ const navLinks = [
 const Navbar = () => {
   const pathname = usePathname();
   const user = false;
-  // const [user, setUser] = useState(false);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white dark:bg-gray-950">
+    <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[#560bad] to-[#450292]">
       <div className="flex h-16 items-center justify-between px-4 md:px-6 max-w-7xl mx-auto">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-primary">
+        <Link href="/" className="text-3xl font-bold text-white">
           LMS
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden md:flex items-center space-x-8">
           {navLinks.map(({ label, href }) => (
             <Link
               key={href}
               href={href}
               className={clsx(
-                " font-medium text-base transition-colors hover:text-primary",
+                "font-medium text-lg text-white transition-all duration-300 hover:text-yellow-400 hover:underline",
                 pathname === href
-                  ? " text-indigo-900 px-2 py-1 rounded border border-indigo-900 "
-                  : "text-muted-foreground"
+                  ? "text-yellow-400 border-b-2 border-white"
+                  : "text-gray-200"
               )}
             >
               {label}
@@ -52,7 +50,7 @@ const Navbar = () => {
           ))}
           {user ? (
             <Link
-              className="px-2 py-1 rounded bg-indigo-900 border text-white text-base border-indigo-900"
+              className="px-4 py-2 rounded-full bg-yellow-400 text-white text-base font-semibold hover:bg-yellow-500 transition-colors"
               href="/logout"
             >
               Logout
@@ -60,10 +58,10 @@ const Navbar = () => {
           ) : (
             <Link
               className={clsx(
-                " bg-indigo-900 text-white px-3 py-2 rounded font-medium text-base transition-colors hover:text-white",
+                "px-4 py-2 rounded-full bg-yellow-400 text-white text-base font-semibold hover:bg-yellow-500 transition-colors",
                 pathname === "/login"
-                  ? "text-indigo-900 px-2 py-1 rounded border"
-                  : "text-muted-foreground"
+                  ? "text-indigo-900 bg-white border border-indigo-900"
+                  : "text-gray-200"
               )}
               href="/login"
             >
@@ -77,34 +75,42 @@ const Navbar = () => {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Toggle Menu">
-                <MenuIcon className="h-6 w-6" />
+                <MenuIcon className="h-6 w-6 text-white" />
               </Button>
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="w-64 sm:w-72 h-full overflow-y-auto"
+              className="w-64 sm:w-72 h-full bg-white text-white shadow-2xl"
             >
               <SheetHeader>
-                <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
+                <SheetTitle className="text-2xl font-bold text-white">
+                  Main Menu
+                </SheetTitle>
               </SheetHeader>
 
-              <div className="flex flex-col gap-4 mt-4">
+              <div className="flex flex-col gap-2 mt-6 px-4">
                 {navLinks.map(({ label, href }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    // className={clsx(
-                    //   "text-base font-medium text-base px-2 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition",
-                    //   pathname === href
-                    //     ? "text-primary"
-                    //     : "text-muted-foreground"
-                    // )}
-                  >
-                    <AnimatedButton className="w-auto  px-2 h-auto text-white hover:text-white">
+                  <Link key={href} href={href} className="w-full">
+                    <Button className="text-lg w-full border-b bg-transparent text-start text-[#560bad] py-3 px-6 rounded-md hover:bg-[#9b2c91] transition-all ease-in-out duration-300">
                       {label}
-                    </AnimatedButton>
+                    </Button>
                   </Link>
                 ))}
+                {user ? (
+                  <Link
+                    href="/logout"
+                    className="py-3 px-6 text-lg text-white rounded-md bg-yellow-400 hover:bg-yellow-500 transition-colors duration-300"
+                  >
+                    Logout
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="py-3 px-6 text-lg text-white rounded-md bg-yellow-400 hover:bg-yellow-500 transition-colors duration-300"
+                  >
+                    Login
+                  </Link>
+                )}
               </div>
             </SheetContent>
           </Sheet>
