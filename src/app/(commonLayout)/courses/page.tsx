@@ -116,8 +116,6 @@ const CourseSection = () => {
                   className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col gap-1"
                 >
                   <div className="relative w-full h-0 pb-[56.25%]">
-                    {" "}
-                    {/* This sets a 16:9 aspect ratio */}
                     <img
                       src={course.thumbnail}
                       alt={course.title}
