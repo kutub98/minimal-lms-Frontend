@@ -14,44 +14,44 @@ interface Instructor {
 
 const instructors: Instructor[] = [
   {
-    name: "Dr. Emily Carter",
-    title: "AI Researcher @ MIT",
+    name: "Dipto Karmakar",
+    title: "Hr @ DataPollex",
     image: "/instructors/emily.jpg",
     quote:
       "“True intelligence isn't in knowing everything — it's in the curiosity to learn.”",
     tagline: "Machine Learning | AI | DeepTech"
   },
   {
-    name: "James Lee",
-    title: "Senior Engineer @ Google",
+    name: "Rakib Rezwan",
+    title: "Senior Engineer @ DataPollex",
     image: "/instructors/james.jpg",
     quote: "“Code should not just work — it should inspire.”",
     tagline: "Full Stack | Systems | JS/TS"
   },
   {
-    name: "Sophia Khan",
-    title: "Lead UX @ Adobe",
+    name: "Rakib Ul Hasna",
+    title: "Lead UX @ DataPollex",
     image: "/instructors/sophia.jpg",
     quote: "“Design is the silent ambassador of your product.”",
     tagline: "UX | UI | Product Design"
   },
   {
-    name: "Carlos Martínez",
-    title: "Cloud Architect @ AWS",
+    name: "Rezwan Ahmed",
+    title: "Cloud Architect @ DataPollex",
     image: "/instructors/carlos.jpg",
     quote: "“Build for scale, think for impact.”",
     tagline: "DevOps | Cloud | Infrastructure"
   },
   {
-    name: "Amara Ndlovu",
-    title: "Creative Director @ Netflix",
+    name: "Rezwan Ahmed",
+    title: "Creative Director @ DataPollex",
     image: "/instructors/amara.jpg",
     quote: "“Stories shape the future — tell them well.”",
     tagline: "Branding | Visual Storytelling | Creative"
   },
   {
-    name: "Liam Zhang",
-    title: "Cybersecurity Analyst @ NSA",
+    name: "Rakib Ul Hasna",
+    title: "Cybersecurity Analyst @ DataPollex",
     image: "/instructors/liam.jpg",
     quote: "“Security is a mindset, not a feature.”",
     tagline: "Cybersecurity | Privacy | Threat Analysis"

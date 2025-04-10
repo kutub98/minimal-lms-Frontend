@@ -49,6 +49,9 @@ const LoginPage = () => {
         const token = data.data.accessToken;
         const userPayload = JSON.parse(atob(token.split(".")[1]));
 
+        // ✅ Save token to localStorage
+        localStorage.setItem("token", token); // <-- Add this line
+
         login(
           {
             id: userPayload.id,

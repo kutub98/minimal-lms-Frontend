@@ -57,8 +57,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Decorative Overlay */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-transparent via-transparent to-[#560bad]/80 z-0"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-transparent via-transparent to-[#560bad]/24 z-0"></div>
     </div>
   );
 };

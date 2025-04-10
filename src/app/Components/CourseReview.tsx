@@ -16,24 +16,24 @@ interface Review {
 
 const reviews: Review[] = [
   {
-    name: "Sarah Johnson",
-    title: "Software Engineer at Google",
+    name: "Rakibul Hasan",
+    title: "Software Engineer at Programming Hero",
     avatar: "/avatars/sarah.jpg",
     rating: 5,
     content:
       "This platform completely transformed how I learn. The UI is clean, fast, and incredibly intuitive. Highly recommended!"
   },
   {
-    name: "Alex Kim",
-    title: "UI/UX Designer at Airbnb",
+    name: "Dipto Karmokar",
+    title: "UI/UX Designer at Datapollex",
     avatar: "/avatars/alex.jpg",
     rating: 4,
     content:
       "I love the design of this LMS. It’s user-friendly and responsive on all my devices. Would love to see more interactive content!"
   },
   {
-    name: "John Doe",
-    title: "Product Manager at Meta",
+    name: "Rezwan Ahmed",
+    title: "Product Manager at Datapollex",
     avatar: "/avatars/john.jpg",
     rating: 5,
     content:
