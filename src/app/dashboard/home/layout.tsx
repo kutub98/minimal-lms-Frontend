@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext"; // Import the AuthContext hook
 import { useRouter } from "next/navigation";
 import AdminSidebar from "@/app/Shared/layout/Admin/Sidebar";
 import TopBar from "@/app/Shared/layout/Admin/Topbar";
+import Loading from "@/app/Components/Loading";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -16,7 +17,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [loading, user, router]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   if (!user) return null;
 
   return (
