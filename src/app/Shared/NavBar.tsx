@@ -12,17 +12,18 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
+import { useAuth } from "@/context/AuthContext";
+// Import the useAuth hook
 
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Courses", href: "/courses" },
-  { label: "Dashboard", href: "/dashboard" },
   { label: "Contact", href: "/contact" }
 ];
 
 const Navbar = () => {
   const pathname = usePathname();
-  const user = false;
+  const { user, logout } = useAuth(); // Use the auth context to get user and logout
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[#560bad] to-[#450292]">
@@ -48,13 +49,23 @@ const Navbar = () => {
               {label}
             </Link>
           ))}
+
+          {/* Conditionally render Dashboard and Logout if user is logged in */}
           {user ? (
-            <Link
-              className="px-4 py-2 rounded-full bg-yellow-400 text-white text-base font-semibold hover:bg-yellow-500 transition-colors"
-              href="/logout"
-            >
-              Logout
-            </Link>
+            <>
+              <Link
+                href="/dashboard/home"
+                className="font-medium text-lg text-white transition-all duration-300 hover:text-yellow-400 hover:underline"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={logout}
+                className="px-4 py-2 rounded-full bg-yellow-400 text-white text-base font-semibold hover:bg-yellow-500 transition-colors"
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <Link
               className={clsx(
@@ -96,13 +107,23 @@ const Navbar = () => {
                     </Button>
                   </Link>
                 ))}
+
+                {/* Conditionally render Dashboard and Logout if user is logged in */}
                 {user ? (
-                  <Link
-                    href="/logout"
-                    className="py-3 px-6 text-lg text-white rounded-md bg-yellow-400 hover:bg-yellow-500 transition-colors duration-300"
-                  >
-                    Logout
-                  </Link>
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="py-3 px-6 text-lg text-white rounded-md bg-yellow-400 hover:bg-yellow-500 transition-colors duration-300"
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="py-3 px-6 text-lg text-white rounded-md bg-yellow-400 hover:bg-yellow-500 transition-colors duration-300"
+                    >
+                      Logout
+                    </button>
+                  </>
                 ) : (
                   <Link
                     href="/login"
