@@ -43,11 +43,11 @@ export default function CreateCourseForm() {
     }
 
     try {
-      const res = await fetch("/api/courses/create", {
+      const res = await fetch("/api/courses", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}` // Add Authorization token here
+          Authorization: `${localStorage.getItem("token")}` // Add Authorization token here
         },
         body: JSON.stringify({
           title: formData.title,
@@ -62,7 +62,7 @@ export default function CreateCourseForm() {
 
       if (res.ok) {
         toast.success("Course created successfully");
-        router.push("/dashboard/courses"); // Redirect after successful creation
+        router.push("/dashboard/home/courses"); // Redirect after successful creation
       } else {
         toast.error(result.message || "Failed to create course");
       }

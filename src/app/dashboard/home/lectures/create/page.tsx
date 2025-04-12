@@ -1,4 +1,4 @@
-const CreateUserPage = () => {
-  return <div>CreateUserPage</div>;
+const CreateLectures = () => {
+  return <div>Create lecture</div>;
 };
-export default CreateUserPage;
+export default CreateLectures;

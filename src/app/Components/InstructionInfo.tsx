@@ -22,7 +22,7 @@ const instructors: Instructor[] = [
     tagline: "Machine Learning | AI | DeepTech"
   },
   {
-    name: "Rakib Rezwan",
+    name: "Rakib Rezwan ",
     title: "Senior Engineer @ DataPollex",
     image: "/instructors/james.jpg",
     quote: "“Code should not just work — it should inspire.”",
@@ -43,7 +43,7 @@ const instructors: Instructor[] = [
     tagline: "DevOps | Cloud | Infrastructure"
   },
   {
-    name: "Rezwan Ahmed",
+    name: "Rezwan ",
     title: "Creative Director @ DataPollex",
     image: "/instructors/amara.jpg",
     quote: "“Stories shape the future — tell them well.”",

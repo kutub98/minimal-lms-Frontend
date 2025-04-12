@@ -19,20 +19,18 @@ import { useAuth } from "@/context/AuthContext";
 const navLinks = [
   { href: "/dashboard/home", icon: <FaHome />, label: "Dashboard" },
   {
-    icon: <FaUser />,
+    icon: <FaBookOpen />,
     dropdown: [
-      { href: "/dashboard/home/users", label: "All Users" },
-      { href: "/dashboard/home/users/create", label: "Create User" },
-      { href: "/dashboard/home/users/update", label: "Update User" }
+      { href: "/dashboard/home/courses", label: "All Courses" },
+      { href: "/dashboard/home/courses/create", label: "Create Course" }
     ],
-    label: "User"
+    label: "Courses"
   },
   {
     icon: <FaBoxes />,
     dropdown: [
-      { href: "/dashboard/home/module", label: "All Modules" },
-      { href: "/dashboard/home/module/create", label: "Create Module" },
-      { href: "/dashboard/home/module/update", label: "Update Module" }
+      { href: "/dashboard/home/modules", label: "All Modules" },
+      { href: "/dashboard/home/modules/create", label: "Create Module" }
     ],
     label: "Module"
   },
@@ -40,19 +38,19 @@ const navLinks = [
     icon: <FaVideo />,
     dropdown: [
       { href: "/dashboard/home/lectures", label: "All Lectures" },
-      { href: "/dashboard/home/lectures/create", label: "Create Lecture" },
-      { href: "/dashboard/home/lectures/update", label: "Update Lecture" }
+      { href: "/dashboard/home/lectures/create", label: "Create Lecture" }
     ],
     label: "Lectures"
   },
+
   {
-    icon: <FaBookOpen />,
+    icon: <FaUser />,
     dropdown: [
-      { href: "/dashboard/home/courses", label: "All Courses" },
-      { href: "/dashboard/home/courses/create", label: "Create Course" },
-      { href: "/dashboard/home/courses/update", label: "Update Course" }
+      { href: "/dashboard/home/users", label: "All Users" },
+      { href: "/dashboard/home/users/create", label: "Create User" }
+      // { href: "/dashboard/home/users/update", label: "Update User" }
     ],
-    label: "Courses"
+    label: "User"
   },
   {
     label: "Settings",
