@@ -14,6 +14,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactPlayer from "react-player";
 import toast from "react-hot-toast";
 
+// Loader component
+const Loader = () => (
+  <div className="flex justify-center items-center space-x-2">
+    <div className="w-8 h-8 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+    <span className="text-gray-500">Loading...</span>
+  </div>
+);
+
 interface Lecture {
   _id: string;
   title: string;
@@ -46,12 +54,23 @@ export default function LecturesPage() {
   const [editTitle, setEditTitle] = useState<string>("");
   const [editVideoUrl, setEditVideoUrl] = useState<string>("");
 
+  const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
+  const [loadingModules] = useState<boolean>(false);
+  const [loadingLectures] = useState<boolean>(false);
+
   // Fetch courses
   useEffect(() => {
+    setLoadingCourses(true);
     fetch("/api/courses")
       .then((res) => res.json())
-      .then((data: { data: Course[] }) => setCourses(data.data))
-      .catch((err) => console.error("Failed to fetch courses:", err));
+      .then((data: { data: Course[] }) => {
+        setCourses(data.data);
+        setLoadingCourses(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch courses:", err);
+        setLoadingCourses(false);
+      });
   }, []);
 
   // Get selected course and module
@@ -120,22 +139,26 @@ export default function LecturesPage() {
 
       {/* Course Dropdown */}
       <div className="mb-4">
-        <Label>🎓 Select Course</Label>
-        <select
-          value={selectedCourseId}
-          onChange={(e) => {
-            setSelectedCourseId(e.target.value);
-            setSelectedModuleId("");
-          }}
-          className="w-full border rounded-md px-3 py-2 shadow-sm focus:outline-none"
-        >
-          <option value="">-- Choose a Course --</option>
-          {courses.map((course) => (
-            <option key={course._id} value={course._id}>
-              {course.title}
-            </option>
-          ))}
-        </select>
+        <Label className="my-2 text-lg">Select Course</Label>
+        {loadingCourses ? (
+          <Loader />
+        ) : (
+          <select
+            value={selectedCourseId}
+            onChange={(e) => {
+              setSelectedCourseId(e.target.value);
+              setSelectedModuleId("");
+            }}
+            className="w-full border rounded-md px-3 py-2 shadow-sm focus:outline-none"
+          >
+            <option value="">-- Choose a Course --</option>
+            {courses.map((course) => (
+              <option key={course._id} value={course._id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Module Dropdown */}
@@ -143,28 +166,34 @@ export default function LecturesPage() {
         selectedCourse.modules &&
         selectedCourse.modules.length > 0 && (
           <div className="mb-6">
-            <Label>📦 Select Module</Label>
-            <select
-              value={selectedModuleId}
-              onChange={(e) => setSelectedModuleId(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 shadow-sm focus:outline-none"
-            >
-              <option value="">-- Choose a Module --</option>
-              {selectedCourse.modules.map((mod) => (
-                <option key={mod._id} value={mod._id}>
-                  {mod.title}
-                </option>
-              ))}
-            </select>
+            <Label className="my-2 text-lg"> Select Module</Label>
+            {loadingModules ? (
+              <Loader />
+            ) : (
+              <select
+                value={selectedModuleId}
+                onChange={(e) => setSelectedModuleId(e.target.value)}
+                className="w-full border rounded-md px-3 py-2 shadow-sm focus:outline-none"
+              >
+                <option value="">-- Choose a Module --</option>
+                {selectedCourse.modules.map((mod) => (
+                  <option key={mod._id} value={mod._id}>
+                    {mod.title}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         )}
 
       {/* Lecture List */}
       {selectedModule && selectedModule.lectures && (
         <div>
-          <h2 className="text-xl font-semibold mb-4">🎥 Lectures</h2>
+          <h2 className="text-xl font-semibold mb-4">Lectures</h2>
 
-          {selectedModule.lectures.length > 0 ? (
+          {loadingLectures ? (
+            <Loader />
+          ) : selectedModule.lectures.length > 0 ? (
             <ScrollArea className="space-y-4 max-h-[400px] pr-2">
               {selectedModule.lectures.map((lecture) => (
                 <div
@@ -199,7 +228,7 @@ export default function LecturesPage() {
       <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>🎬 Now Playing</DialogTitle>
+            <DialogTitle>Now Playing</DialogTitle>
           </DialogHeader>
           <div className="aspect-video w-full">
             {selectedVideoUrl && (
@@ -222,14 +251,14 @@ export default function LecturesPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Title</Label>
+              <Label className="my-2 text-lg">Title</Label>
               <Input
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
               />
             </div>
             <div>
-              <Label>Video URL</Label>
+              <Label className="my-2 text-lg">Video URL</Label>
               <Input
                 value={editVideoUrl}
                 onChange={(e) => setEditVideoUrl(e.target.value)}
