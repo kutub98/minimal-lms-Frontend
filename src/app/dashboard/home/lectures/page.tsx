@@ -8,14 +8,18 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactPlayer from "react-player";
+import toast from "react-hot-toast";
 
-// --- Types ---
 interface Lecture {
   _id: string;
   title: string;
   videoUrl: string;
+  moduleId: string;
+  pdfs?: string[];
 }
 
 interface Module {
@@ -35,8 +39,22 @@ export default function LecturesPage() {
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [selectedModuleId, setSelectedModuleId] = useState<string>("");
   const [selectedVideoUrl, setSelectedVideoUrl] = useState<string>("");
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [currentLecture, setCurrentLecture] = useState<Lecture | null>(null);
+  const [editTitle, setEditTitle] = useState<string>("");
+  const [editVideoUrl, setEditVideoUrl] = useState<string>("");
+
+  // Fetch courses
+  useEffect(() => {
+    fetch("/api/courses")
+      .then((res) => res.json())
+      .then((data: { data: Course[] }) => setCourses(data.data))
+      .catch((err) => console.error("Failed to fetch courses:", err));
+  }, []);
+
+  // Get selected course and module
   const selectedCourse = courses.find(
     (course) => course._id === selectedCourseId
   );
@@ -44,12 +62,7 @@ export default function LecturesPage() {
     (mod) => mod._id === selectedModuleId
   );
 
-  useEffect(() => {
-    fetch("/api/courses")
-      .then((res) => res.json())
-      .then((data) => setCourses(data.data));
-  }, []);
-
+  // Handle video view
   const handleOpenVideo = (url: string) => {
     setSelectedVideoUrl(url);
     setIsDialogOpen(true);
@@ -60,6 +73,45 @@ export default function LecturesPage() {
     setSelectedVideoUrl("");
   };
 
+  // Handle edit lecture
+  const handleOpenEdit = (lecture: Lecture) => {
+    setCurrentLecture(lecture);
+    setEditTitle(lecture.title);
+    setEditVideoUrl(lecture.videoUrl);
+    setEditDialogOpen(true);
+  };
+
+  const handleUpdateLecture = async () => {
+    if (!currentLecture) return;
+    try {
+      const res = await fetch(`/api/lectures/${currentLecture._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title: editTitle,
+          videoUrl: editVideoUrl,
+          moduleId: currentLecture.moduleId
+        })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        toast.success("✅ Lecture updated successfully!");
+        setEditDialogOpen(false);
+        // Refresh data
+        const refreshed = await fetch("/api/courses");
+        const json = await refreshed.json();
+        setCourses(json.data);
+      } else {
+        toast.error("Failed to update");
+      }
+    } catch (error) {
+      console.error("Error updating lecture:", error);
+    }
+  };
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">
@@ -68,9 +120,7 @@ export default function LecturesPage() {
 
       {/* Course Dropdown */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">
-          🎓 Select Course
-        </label>
+        <Label>🎓 Select Course</Label>
         <select
           value={selectedCourseId}
           onChange={(e) => {
@@ -89,12 +139,11 @@ export default function LecturesPage() {
       </div>
 
       {/* Module Dropdown */}
-      {selectedCourse ? (
-        selectedCourse.modules.length > 0 ? (
+      {selectedCourse &&
+        selectedCourse.modules &&
+        selectedCourse.modules.length > 0 && (
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">
-              Select Module
-            </label>
+            <Label>📦 Select Module</Label>
             <select
               value={selectedModuleId}
               onChange={(e) => setSelectedModuleId(e.target.value)}
@@ -108,19 +157,14 @@ export default function LecturesPage() {
               ))}
             </select>
           </div>
-        ) : (
-          <p className="text-gray-500 mb-6">
-            ⚠️ No modules available in this course.
-          </p>
-        )
-      ) : null}
+        )}
 
-      {/* Lectures List */}
-      {selectedModuleId && (
+      {/* Lecture List */}
+      {selectedModule && selectedModule.lectures && (
         <div>
-          <h2 className="text-xl font-semibold mb-4">Lectures</h2>
+          <h2 className="text-xl font-semibold mb-4">🎥 Lectures</h2>
 
-          {selectedModule && selectedModule.lectures.length > 0 ? (
+          {selectedModule.lectures.length > 0 ? (
             <ScrollArea className="space-y-4 max-h-[400px] pr-2">
               {selectedModule.lectures.map((lecture) => (
                 <div
@@ -131,27 +175,27 @@ export default function LecturesPage() {
                     <h3 className="text-lg font-medium">{lecture.title}</h3>
                   </div>
                   <div className="space-x-2">
-                    <Button
-                      variant="default"
-                      onClick={() => handleOpenVideo(lecture.videoUrl)}
-                    >
+                    <Button onClick={() => handleOpenVideo(lecture.videoUrl)}>
                       View
                     </Button>
-                    <Button variant="secondary">Edit</Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => handleOpenEdit(lecture)}
+                    >
+                      Edit
+                    </Button>
                     <Button variant="destructive">Delete</Button>
                   </div>
                 </div>
               ))}
             </ScrollArea>
           ) : (
-            <p className="text-gray-500">
-              ⚠️ No lectures available in this module.
-            </p>
+            <p className="text-gray-500">No lectures found in this module.</p>
           )}
         </div>
       )}
 
-      {/* Video Player Modal */}
+      {/* Video Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
@@ -166,6 +210,34 @@ export default function LecturesPage() {
                 height="100%"
               />
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Lecture Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit Lecture</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Title</Label>
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Video URL</Label>
+              <Input
+                value={editVideoUrl}
+                onChange={(e) => setEditVideoUrl(e.target.value)}
+              />
+            </div>
+            <Button onClick={handleUpdateLecture} className="w-full mt-4">
+              Update Lecture
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

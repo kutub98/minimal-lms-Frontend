@@ -8,6 +8,17 @@ import Container from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 interface Module {
   _id: string;
@@ -201,74 +212,70 @@ const CourseSection = () => {
         </div>
       </Container>
 
-      {/* Edit Modal */}
       {isEditing && editingCourse && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-4 shadow-xl">
-            <h3 className="text-xl font-bold text-gray-700">Edit Course</h3>
-            <input
-              type="text"
-              placeholder="Title"
-              value={editingCourse.title}
-              onChange={(e) =>
-                setEditingCourse({ ...editingCourse, title: e.target.value })
-              }
-              className="w-full border p-2 rounded"
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              value={editingCourse.price}
-              onChange={(e) =>
-                setEditingCourse({
-                  ...editingCourse,
-                  price: parseFloat(e.target.value)
-                })
-              }
-              className="w-full border p-2 rounded"
-            />
-            <input
-              type="text"
-              placeholder="Thumbnail URL"
-              value={editingCourse.thumbnail}
-              onChange={(e) =>
-                setEditingCourse({
-                  ...editingCourse,
-                  thumbnail: e.target.value
-                })
-              }
-              className="w-full border p-2 rounded"
-            />
-            <textarea
-              placeholder="Description"
-              value={editingCourse.description}
-              onChange={(e) =>
-                setEditingCourse({
-                  ...editingCourse,
-                  description: e.target.value
-                })
-              }
-              className="w-full border p-2 rounded h-24"
-            />
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditingCourse(null);
-                }}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmitEdit}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Save Changes
-              </button>
+        <Dialog open={isEditing} onOpenChange={setIsEditing}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Edit Course</DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <Input
+                placeholder="Title"
+                value={editingCourse.title}
+                onChange={(e) =>
+                  setEditingCourse({ ...editingCourse, title: e.target.value })
+                }
+              />
+              <Input
+                type="number"
+                placeholder="Price"
+                value={editingCourse.price}
+                onChange={(e) =>
+                  setEditingCourse({
+                    ...editingCourse,
+                    price: parseFloat(e.target.value)
+                  })
+                }
+              />
+              <Input
+                placeholder="Thumbnail URL"
+                value={editingCourse.thumbnail}
+                onChange={(e) =>
+                  setEditingCourse({
+                    ...editingCourse,
+                    thumbnail: e.target.value
+                  })
+                }
+              />
+              <Textarea
+                placeholder="Description"
+                value={editingCourse.description}
+                onChange={(e) =>
+                  setEditingCourse({
+                    ...editingCourse,
+                    description: e.target.value
+                  })
+                }
+              />
             </div>
-          </div>
-        </div>
+
+            <DialogFooter className="mt-4">
+              <DialogClose asChild>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditingCourse(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button onClick={handleSubmitEdit}>Save Changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

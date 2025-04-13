@@ -3,6 +3,16 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Course {
   _id: string;
@@ -122,7 +132,6 @@ const ModulesSection = () => {
       <h2 className="text-3xl font-bold mb-8 text-neutral-800 tracking-tight">
         🎓 Manage Course Modules
       </h2>
-
       <select
         value={selectedCourseId}
         onChange={(e) => setSelectedCourseId(e.target.value)}
@@ -135,7 +144,6 @@ const ModulesSection = () => {
           </option>
         ))}
       </select>
-
       {loading ? (
         <div className="flex items-center gap-2 text-blue-500">
           <Loader2 className="animate-spin" />
@@ -173,65 +181,72 @@ const ModulesSection = () => {
           ))}
         </ul>
       )}
-
       {editingModule && (
-        <form
-          onSubmit={handleUpdateModule}
-          className="mt-8 bg-gray-50 border rounded-xl p-6 shadow-md"
+        <Dialog
+          open={!!editingModule}
+          onOpenChange={() => {
+            setEditingModule(null);
+            setFormData({ title: "", moduleNumber: "" });
+          }}
         >
-          <h3 className="text-xl font-semibold mb-4 text-gray-700">
-            Edit Module
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">
-                Module Title
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">
-                Module Number
-              </label>
-              <input
-                type="number"
-                value={formData.moduleNumber}
-                onChange={(e) =>
-                  setFormData({ ...formData, moduleNumber: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                required
-              />
-            </div>
-          </div>
+          <DialogContent className="max-w-xl">
+            <form onSubmit={handleUpdateModule}>
+              <DialogHeader>
+                <DialogTitle>Edit Module</DialogTitle>
+              </DialogHeader>
 
-          <div className="mt-6 flex justify-end gap-4">
-            <button
-              type="submit"
-              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md font-medium transition"
-            >
-              Update Module
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEditingModule(null);
-                setFormData({ title: "", moduleNumber: "" });
-              }}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md font-medium transition"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+              <div className="grid md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Module Title
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Module Number
+                  </label>
+                  <Input
+                    type="number"
+                    value={formData.moduleNumber}
+                    onChange={(e) =>
+                      setFormData({ ...formData, moduleNumber: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+              </div>
+
+              <DialogFooter className="mt-6 flex justify-end gap-4">
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingModule(null);
+                      setFormData({ title: "", moduleNumber: "" });
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  className="bg-green-500 hover:bg-green-600"
+                >
+                  Update Module
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );
