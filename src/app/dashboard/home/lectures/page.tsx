@@ -1,182 +1,174 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useEffect, useState } from "react";
-import { toast, Toaster } from "react-hot-toast";
-import { Pencil, Trash2 } from "lucide-react";
-import Container from "@/components/ui/Container";
-import { Skeleton } from "@/components/ui/skeleton";
 
-interface Course {
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import ReactPlayer from "react-player";
+
+// --- Types ---
+interface Lecture {
   _id: string;
   title: string;
+  videoUrl: string;
 }
 
 interface Module {
   _id: string;
   title: string;
-  moduleNumber: number;
-  courseId: string; // assuming this exists to relate module to course
+  lectures: Lecture[];
 }
 
-interface Lecture {
+interface Course {
   _id: string;
   title: string;
-  videoUrl: string;
-  moduleId: string;
+  modules: Module[];
 }
 
-const LecturesSection = () => {
-  const [modules, setModules] = useState<Module[]>([]);
-  const [lectures, setLectures] = useState<Lecture[]>([]);
+export default function LecturesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
+  const [selectedModuleId, setSelectedModuleId] = useState<string>("");
+  const [selectedVideoUrl, setSelectedVideoUrl] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const fetchData = async () => {
-    try {
-      const [lecturesRes, modulesRes, coursesRes] = await Promise.all([
-        fetch("/api/lectures"),
-        fetch("/api/modules"),
-        fetch("/api/courses")
-      ]);
-
-      if (!lecturesRes.ok || !modulesRes.ok || !coursesRes.ok) {
-        throw new Error("One or more requests failed");
-      }
-
-      const [lecturesData, modulesData, coursesData] = await Promise.all([
-        lecturesRes.json(),
-        modulesRes.json(),
-        coursesRes.json()
-      ]);
-
-      setLectures(lecturesData.data || []);
-      setModules(modulesData.data || []);
-      setCourses(coursesData.data || []);
-    } catch (error) {
-      toast.error("Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const selectedCourse = courses.find(
+    (course) => course._id === selectedCourseId
+  );
+  const selectedModule = selectedCourse?.modules.find(
+    (mod) => mod._id === selectedModuleId
+  );
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
+    fetch("/api/courses")
+      .then((res) => res.json())
+      .then((data) => setCourses(data.data));
   }, []);
 
-  const handleEdit = (lectureId: string) => {
-    toast("Edit functionality triggered for: " + lectureId);
-    // Implement edit modal or route
+  const handleOpenVideo = (url: string) => {
+    setSelectedVideoUrl(url);
+    setIsDialogOpen(true);
   };
 
-  const handleDelete = async (lectureId: string) => {
-    const confirmed = confirm("Are you sure you want to delete this lecture?");
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch(`/api/lectures/${lectureId}`, {
-        method: "DELETE"
-      });
-
-      if (!res.ok) throw new Error("Failed to delete");
-
-      toast.success("Lecture deleted");
-      setLectures((prev) => prev.filter((lec) => lec._id !== lectureId));
-    } catch {
-      toast.error("Delete failed");
-    }
-  };
-
-  const renderLectures = () => {
-    return courses.map((course) => {
-      const courseModules = modules.filter((m) => m.courseId === course._id);
-
-      return (
-        <div key={course._id} className="p-4 border-b">
-          <h3 className="text-2xl font-bold text-indigo-600 mb-3">
-            {course.title}
-          </h3>
-
-          {courseModules.length === 0 ? (
-            <p className="text-gray-500 ml-4">No modules in this course.</p>
-          ) : (
-            courseModules.map((module) => {
-              const moduleLectures = lectures.filter(
-                (lec) => lec.moduleId === module._id
-              );
-
-              return (
-                <div key={module._id} className="ml-4 mb-4">
-                  <h4 className="text-xl font-semibold text-gray-700">
-                    Module {module.moduleNumber}: {module.title}
-                  </h4>
-
-                  {moduleLectures.length === 0 ? (
-                    <p className="text-gray-400 ml-4">
-                      No lectures in this module.
-                    </p>
-                  ) : (
-                    <ul className="ml-6 mt-2 space-y-2">
-                      {moduleLectures.map((lecture) => (
-                        <li
-                          key={lecture._id}
-                          className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-                        >
-                          <span>{lecture.title}</span>
-                          <div className="flex gap-3">
-                            <button
-                              onClick={() => handleEdit(lecture._id)}
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              <Pencil size={18} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(lecture._id)}
-                              className="text-red-600 hover:text-red-800"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              );
-            })
-          )}
-        </div>
-      );
-    });
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedVideoUrl("");
   };
 
   return (
-    <div>
-      <Container className="py-4">
-        <Toaster position="top-right" />
-        <h2 className="text-4xl font-extrabold text-start text-gray-700 mb-8">
-          Manage Lectures
-        </h2>
+    <div className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        📚 Lecture Explorer
+      </h1>
 
-        <div className="overflow-x-auto rounded-xl shadow-xl bg-white">
-          {loading ? (
-            <div className="p-6 space-y-4">
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <Skeleton key={idx} className="h-12 w-full rounded-md" />
+      {/* Course Dropdown */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-1">
+          🎓 Select Course
+        </label>
+        <select
+          value={selectedCourseId}
+          onChange={(e) => {
+            setSelectedCourseId(e.target.value);
+            setSelectedModuleId("");
+          }}
+          className="w-full border rounded-md px-3 py-2 shadow-sm focus:outline-none"
+        >
+          <option value="">-- Choose a Course --</option>
+          {courses.map((course) => (
+            <option key={course._id} value={course._id}>
+              {course.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Module Dropdown */}
+      {selectedCourse ? (
+        selectedCourse.modules.length > 0 ? (
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-1">
+              Select Module
+            </label>
+            <select
+              value={selectedModuleId}
+              onChange={(e) => setSelectedModuleId(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 shadow-sm focus:outline-none"
+            >
+              <option value="">-- Choose a Module --</option>
+              {selectedCourse.modules.map((mod) => (
+                <option key={mod._id} value={mod._id}>
+                  {mod.title}
+                </option>
               ))}
-            </div>
-          ) : lectures.length === 0 ? (
-            <p className="text-center p-6 text-gray-500">
-              No Lectures available.
-            </p>
+            </select>
+          </div>
+        ) : (
+          <p className="text-gray-500 mb-6">
+            ⚠️ No modules available in this course.
+          </p>
+        )
+      ) : null}
+
+      {/* Lectures List */}
+      {selectedModuleId && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Lectures</h2>
+
+          {selectedModule && selectedModule.lectures.length > 0 ? (
+            <ScrollArea className="space-y-4 max-h-[400px] pr-2">
+              {selectedModule.lectures.map((lecture) => (
+                <div
+                  key={lecture._id}
+                  className="border p-4 rounded-lg shadow-sm bg-white flex items-center justify-between hover:shadow-md transition"
+                >
+                  <div>
+                    <h3 className="text-lg font-medium">{lecture.title}</h3>
+                  </div>
+                  <div className="space-x-2">
+                    <Button
+                      variant="default"
+                      onClick={() => handleOpenVideo(lecture.videoUrl)}
+                    >
+                      View
+                    </Button>
+                    <Button variant="secondary">Edit</Button>
+                    <Button variant="destructive">Delete</Button>
+                  </div>
+                </div>
+              ))}
+            </ScrollArea>
           ) : (
-            <div className="p-6">{renderLectures()}</div>
+            <p className="text-gray-500">
+              ⚠️ No lectures available in this module.
+            </p>
           )}
         </div>
-      </Container>
+      )}
+
+      {/* Video Player Modal */}
+      <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>🎬 Now Playing</DialogTitle>
+          </DialogHeader>
+          <div className="aspect-video w-full">
+            {selectedVideoUrl && (
+              <ReactPlayer
+                url={selectedVideoUrl}
+                controls
+                width="100%"
+                height="100%"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
-};
-
-export default LecturesSection;
+}
