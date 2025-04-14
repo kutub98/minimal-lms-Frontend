@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET() {
   try {
@@ -36,5 +36,29 @@ console.log(modulesData, lecturesData, coursesData, 'api of lectures')
       { error: "Failed to fetch modules and lectures" },
       { status: 500 }
     );
+  }
+}
+
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const token = req.headers.get("Authorization") || "";
+
+    const res = await fetch('https://minimal-lms-backend.vercel.app/api/v1/lectures', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+
+    return NextResponse.json(data, { status: res.status });
+  } catch (error) {
+    console.error("POST Error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

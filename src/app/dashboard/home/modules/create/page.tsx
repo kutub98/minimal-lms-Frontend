@@ -123,9 +123,7 @@ const CreateModuleForm = () => {
               required
               className="w-full px-4 py-3 text-sm rounded-xl border border-gray-300 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:outline-none transition"
             >
-              <option value="" disabled>
-                Select a course
-              </option>
+              <option value="">Select a course</option>
               {courses.map((course) => (
                 <option key={course._id} value={course._id}>
                   {course.title}

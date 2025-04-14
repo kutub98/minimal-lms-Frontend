@@ -47,7 +47,7 @@ export default function CreateCourseForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("token")}` // Add Authorization token here
+          Authorization: `${localStorage.getItem("token")}`
         },
         body: JSON.stringify({
           title: formData.title,
@@ -62,7 +62,7 @@ export default function CreateCourseForm() {
 
       if (res.ok) {
         toast.success("Course created successfully");
-        router.push("/dashboard/home/courses"); // Redirect after successful creation
+        router.push("/dashboard/home/courses");
       } else {
         toast.error(result.message || "Failed to create course");
       }

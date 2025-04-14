@@ -39,22 +39,22 @@ export async function PATCH(
   }
 }
 
-
-// ✅ POST: Create a new lecture
-export async function POST(req: NextRequest) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const body = await req.json();
+    const { id } = await context.params;
     const token = req.headers.get("Authorization") || "";
 
     const response = await fetch(
-      "https://minimal-lms-backend.vercel.app/api/v1/lectures",
+      `https://minimal-lms-backend.vercel.app/api/v1/lectures/${id}`,
       {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify(body),
+          Authorization: token
+        }
       }
     );
 
@@ -66,10 +66,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("POST /api/lectures Error:", error);
+    console.error("Error deleting module:", error);
     return NextResponse.json(
-      { error: "Failed to create lecture" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
+
+
